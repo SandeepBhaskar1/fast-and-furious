@@ -11,7 +11,7 @@ const VideoPlayer = ({ videoID }) => {
 
   return (
     <video ref={videoRef} width="640" height="360" controls autoPlay>
-      <source src={`https://fast-and-furious-901a11jmt-ssandeepachari1-gmailcoms-projects.vercel.app/videos/${encodeURIComponent(videoID)}`} type="video/mp4" />
+      <source src={`${import.meta.env.VITE_REACT_APP_BACKEND_URL}/videos/${encodeURIComponent(videoID)}`} type="video/mp4" />
       Your browser does not support the video tag.
     </video>
   );
