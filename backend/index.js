@@ -7,19 +7,17 @@ const port = 2686;
 
 app.use(cors());
 
-const BACKEND_URL = 'https://fast-and-furious-puce.vercel.app';
-
 const videoFileMap = {
-    'The Fast and Furious': `${BACKEND_URL}/videos/the-fast-and-furious.mp4`,
-    '2 Fast 2 Furious': `${BACKEND_URL}/videos/2-fast-furious.mp4`,
-    'The Fast and Furious: Tokyo Drift': `${BACKEND_URL}/videos/tokyo-drift.mp4`,
-    'Fast and Furious': `${BACKEND_URL}/videos/fast-furious-4.mp4`,
-    'Fast Five': `${BACKEND_URL}/videos/fast-5.mp4`,
-    'Fast and Furious 6': `${BACKEND_URL}/videos/fast-furious-6.mp4`,
-    'Furious 7': `${BACKEND_URL}/videos/furious-7.mp4`,
-    'The Fate of the Furious': `${BACKEND_URL}/videos/furious-8.mp4`,
-    'F9': `${BACKEND_URL}/videos/fast-furious-9.mp4`,
-    'Fast X': `${BACKEND_URL}/videos/fast-x.mp4`,
+    'The Fast and Furious': './videos/the-fast-and-furious.mp4',
+    '2 Fast 2 Furious': './videos/2-fast-furious.mp4',
+    'The Fast and Furious: Tokyo Drift': './videos/tokyo-drift.mp4',
+    'Fast and Furious': './videos/fast-furious-4.mp4',
+    'Fast Five': './videos/fast-5.mp4',
+    'Fast and Furious 6': './videos/fast-furious-6.mp4',
+    'Furious 7': './videos/furious-7.mp4',
+    'The Fate of the Furious': './videos/furious-8.mp4',
+    'F9': './videos/fast-furious-9.mp4',
+    'Fast X': './videos/fast-x.mp4',
 };
 
 app.get('/videos/:filename', (req, res) => {
