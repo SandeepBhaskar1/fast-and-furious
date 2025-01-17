@@ -1,5 +1,6 @@
 const express = require('express');
 const fs = require('fs');
+const path = require('path');
 const cors = require('cors');
 
 const app = express();
@@ -11,72 +12,63 @@ app.use(cors({
   allowedHeaders: ['Range', 'Content-Type', 'Accept', 'Origin']
 }));
 
-
-
-const path = require('path'); 
+app.use(express.static(path.join(__dirname, 'public')));
 
 const videoFileMap = {
-  'The Fast and Furious': path.resolve(__dirname, 'videos', 'the-fast-and-furious.mp4'),
-  '2 Fast 2 Furious': path.resolve(__dirname, 'videos', '2-fast-furious.mp4'),
-  'The Fast and Furious: Tokyo Drift': path.resolve(__dirname, 'videos', 'tokyo-drift.mp4'),
-  'Fast and Furious': path.resolve(__dirname, 'videos', 'fast-furious-4.mp4'),
-  'Fast Five': path.resolve(__dirname, 'videos', 'fast-5.mp4'),
-  'Fast and Furious 6': path.resolve(__dirname, 'videos', 'fast-furious-6.mp4'),
-  'Furious 7': path.resolve(__dirname, 'videos', 'furious-7.mp4'),
-  'The Fate of the Furious': path.resolve(__dirname, 'videos', 'furious-8.mp4'),
-  'F9': path.resolve(__dirname, 'videos', 'fast-furious-9.mp4'),
-  'Fast X': path.resolve(__dirname, 'videos', 'fast-x.mp4'),
+  'The Fast and Furious': '/videos/the-fast-and-furious.mp4',
+  '2 Fast 2 Furious': '/videos/2-fast-furious.mp4',
+  'The Fast and Furious: Tokyo Drift': '/videos/tokyo-drift.mp4',
+  'Fast and Furious': '/videos/fast-furious-4.mp4',
+  'Fast Five': '/videos/fast-5.mp4',
+  'Fast and Furious 6': '/videos/fast-furious-6.mp4',
+  'Furious 7': '/videos/furious-7.mp4',
+  'The Fate of the Furious': '/videos/furious-8.mp4',
+  'F9': '/videos/fast-furious-9.mp4',
+  'Fast X': '/videos/fast-x.mp4',
 };
 
 app.get('/videos/:filename', (req, res) => {
-    const filename = decodeURIComponent(req.params.filename);
-    const filePath = videoFileMap[filename];
+  const filename = decodeURIComponent(req.params.filename);
+  const filePath = path.join(__dirname, 'public', videoFileMap[filename]);
 
-    if (!filePath) {
-        return res.status(404).send('File Not Found');
-    }
+  if (!fs.existsSync(filePath)) {
+    return res.status(404).send('File Not Found');
+  }
 
-    try {
-        const stat = fs.statSync(filePath); // Ensure the file exists
-        const fileSize = stat.size;
-        const range = req.headers.range;
+  const stat = fs.statSync(filePath);
+  const fileSize = stat.size;
+  const range = req.headers.range;
 
-        if (range) {
-            const parts = range.replace(/bytes=/, '').split('-');
-            const start = parseInt(parts[0], 10);
-            const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
+  if (!range) {
+    const head = {
+      'Content-Length': fileSize,
+      'Content-Type': 'video/mp4',
+    };
+    return res.writeHead(200, head).pipe(fs.createReadStream(filePath));
+  }
 
-            if (start >= fileSize || start < 0 || end >= fileSize) {
-                return res.status(416).send('Requested range not satisfiable');
-            }
+  const parts = range.replace(/bytes=/, '').split('-');
+  const start = parseInt(parts[0], 10);
+  const end = parts[1] ? parseInt(parts[1], 10) : fileSize - 1;
 
-            const chunkSize = (end - start) + 1;
-            const file = fs.createReadStream(filePath, { start, end });
-            const head = {
-                'Content-Range': `bytes ${start}-${end}/${fileSize}`,
-                'Accept-Ranges': 'bytes',
-                'Content-Length': chunkSize,
-                'Content-Type': 'video/mp4',
-            };
+  if (start >= fileSize || end >= fileSize || start > end) {
+    return res.status(416).send('Requested range not satisfiable');
+  }
 
-            res.writeHead(206, head);
-            file.pipe(res);
-        } else {
-            const head = {
-                'Content-Length': fileSize,
-                'Content-Type': 'video/mp4',
-            };
+  const chunkSize = (end - start) + 1;
+  const fileStream = fs.createReadStream(filePath, { start, end });
+  
+  const head = {
+    'Content-Range': `bytes ${start}-${end}/${fileSize}`,
+    'Accept-Ranges': 'bytes',
+    'Content-Length': chunkSize,
+    'Content-Type': 'video/mp4',
+  };
 
-            res.writeHead(200, head);
-            fs.createReadStream(filePath).pipe(res);
-        }
-    } catch (error) {
-        console.error('Error:', error.message);
-        res.status(500).send('Internal Server Error');
-    }
+  res.writeHead(206, head);
+  fileStream.pipe(res);
 });
 
-
 app.listen(port, () => {
-    console.log(`Server is listening on http://localhost:${port}`);
+  console.log(`Server is listening on http://localhost:${port}`);
 });
