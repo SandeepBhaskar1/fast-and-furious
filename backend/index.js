@@ -7,12 +7,13 @@ const app = express();
 const port = 2686;
 
 app.use(cors({
-  origin: '*',
+  origin: ['http://localhost:5173', 'https://fast-and-furious-9bnf.vercel.app'],
   methods: ['GET', 'OPTIONS'],
   allowedHeaders: ['Range', 'Content-Type', 'Accept', 'Origin']
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));
+app.use("/public", express.static("/public"));
 
 const videoFileMap = {
   'The Fast and Furious': 'videos/the-fast-and-furious.mp4',
