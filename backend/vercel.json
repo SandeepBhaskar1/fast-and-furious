@@ -4,8 +4,7 @@
       { "src": "index.js", "use": "@vercel/node" }
     ],
     "routes": [
-      { "src": "/videos/(.*)", "dest": "/public/videos/$1" },
-      { "src": "/(.*)", "dest": "index.js" }
+      { "src": "/videos/(.*)", "dest": "/public/videos/$1" }
     ]
   }
   
