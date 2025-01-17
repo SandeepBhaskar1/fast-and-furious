@@ -7,7 +7,7 @@ const app = express();
 const port = process.env.PORT || 2686;
 
 app.use(cors({
-  origin: "https://fast-and-furious-tau.vercel.app"  
+  origin: "https://fast-and-furious-tau.vercel.app/"  
 }));
 
 app.use(express.static(path.join(__dirname, 'public')));

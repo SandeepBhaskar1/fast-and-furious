@@ -26,9 +26,10 @@ const VideoPlayer = () => {
             autoPlay
           >
             <source
-              src={`http://localhost:2686/video/${video}`}
+              src={`https://fast-and-furious-tau.vercel.app/video/${video}`}
               type="video/mp4"
             />
+
             Your browser does not support the video tag.
           </video>
         </div>
