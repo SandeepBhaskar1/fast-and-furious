@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef } from 'react';  
 import './App.css';
 
 const VideoPlayer = () => {
@@ -13,22 +13,16 @@ const VideoPlayer = () => {
     }
   };
 
+  const backendUrl = import.meta.env.VITE_BACKEND_URL;
+
   return (
     <div>
-      <h1>The Fast And Furious Movie Series Trailers </h1>
+      <h1>The Fast And Furious Movie Series Trailers</h1>
 
       {video && (
         <div>
-          <video
-            ref={videoRef}
-            controls
-            width="1080"
-            autoPlay
-          >
-            <source 
-            src={`${process.env.REACT_APP_BACKEND_URL}/video/${video}`} 
-            type="video/mp4" />
-
+          <video ref={videoRef} controls width="1080" autoPlay>
+            <source src={`${backendUrl}/video/${video}`} type="video/mp4" />
             Your browser does not support the video tag.
           </video>
         </div>
@@ -47,7 +41,6 @@ const VideoPlayer = () => {
         <button onClick={() => handleVideoSelect('fast-x.mp4')}>Fast X</button>
       </div>
     </div>
-    
   );
 };
 
