@@ -29,7 +29,13 @@ const videoFileMap = {
 
 app.get('/videos/:filename', (req, res) => {
   const filename = decodeURIComponent(req.params.filename);
-  const filePath = path.join(__dirname, 'public', videoFileMap[filename]);
+  const relativeFilePath = videoFileMap[filename];
+
+  if (!relativeFilePath) {
+    return res.status(404).send('File Not Found');
+  }
+
+  const filePath = path.join(__dirname, 'public', relativeFilePath);
 
   if (!fs.existsSync(filePath)) {
     return res.status(404).send('File Not Found');
@@ -44,7 +50,9 @@ app.get('/videos/:filename', (req, res) => {
       'Content-Length': fileSize,
       'Content-Type': 'video/mp4',
     };
-    return res.writeHead(200, head).pipe(fs.createReadStream(filePath));
+    res.writeHead(200, head);
+    fs.createReadStream(filePath).pipe(res);
+    return;
   }
 
   const parts = range.replace(/bytes=/, '').split('-');
@@ -57,7 +65,7 @@ app.get('/videos/:filename', (req, res) => {
 
   const chunkSize = (end - start) + 1;
   const fileStream = fs.createReadStream(filePath, { start, end });
-  
+
   const head = {
     'Content-Range': `bytes ${start}-${end}/${fileSize}`,
     'Accept-Ranges': 'bytes',
