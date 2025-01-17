@@ -15,7 +15,7 @@ app.use(cors({
 app.use(express.static(path.join(__dirname, 'public')));
 
 const videoFileMap = {
-  'The Fast and Furious': '/videos/the-fast-and-furious.mp4',
+  'The Fast and Furious': 'https://www.youtube.com/watch?v=61vSzkQqL7Y',
   '2 Fast 2 Furious': '/videos/2-fast-furious.mp4',
   'The Fast and Furious: Tokyo Drift': '/videos/tokyo-drift.mp4',
   'Fast and Furious': '/videos/fast-furious-4.mp4',
