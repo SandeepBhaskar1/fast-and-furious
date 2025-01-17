@@ -2,7 +2,7 @@ import React, { useEffect, useRef } from 'react';
 
 const VideoPlayer = ({ videoID }) => {
   const videoRef = useRef(null);
-  const BACKEND_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL || 'https://fast-and-furious-puce.vercel.app';
+  const BACKEND_URL = import.meta.env.VITE_REACT_APP_BACKEND_URL;
 
   useEffect(() => {
     if (videoRef.current) {
