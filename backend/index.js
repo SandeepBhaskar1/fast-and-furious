@@ -6,17 +6,14 @@ const cors = require('cors');
 const app = express();
 const port = process.env.PORT || 2686;
 
-app.use(cors());  // Allow all origins for simplicity
+app.use(cors());
 
-// Serve static video files from the public directory
 app.use(express.static(path.join(__dirname, 'public')));
 
-// Video streaming route
 app.get('/video/:filename', (req, res) => {
   const { filename } = req.params;
   const videoPath = path.join(__dirname, 'public', 'videos', filename);
 
-  // Check if the video file exists
   if (!fs.existsSync(videoPath)) {
     return res.status(404).send('Video not found');
   }
@@ -25,7 +22,6 @@ app.get('/video/:filename', (req, res) => {
   const fileSize = stat.size;
   const range = req.headers.range;
 
-  // If no range header is provided, send the entire video file
   if (!range) {
     res.writeHead(200, {
       'Content-Length': fileSize,
@@ -35,7 +31,6 @@ app.get('/video/:filename', (req, res) => {
     return;
   }
 
-  // Handle range requests for video streaming
   const [start, end] = range.replace(/bytes=/, '').split('-');
   const startByte = parseInt(start, 10);
   const endByte = end ? parseInt(end, 10) : fileSize - 1;
@@ -45,7 +40,6 @@ app.get('/video/:filename', (req, res) => {
     return res.status(416).send('Requested range not satisfiable');
   }
 
-  // Send the range headers and stream the video in chunks
   res.writeHead(206, {
     'Content-Range': `bytes ${startByte}-${endByte}/${fileSize}`,
     'Accept-Ranges': 'bytes',
@@ -57,7 +51,6 @@ app.get('/video/:filename', (req, res) => {
   stream.pipe(res);
 });
 
-// Start the server
 app.listen(port, () => {
   console.log(`Server is running at http://localhost:${port}`);
 });
