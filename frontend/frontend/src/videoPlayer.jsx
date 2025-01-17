@@ -25,10 +25,9 @@ const VideoPlayer = () => {
             width="1080"
             autoPlay
           >
-            <source
-              src={`https://fast-and-furious-tau.vercel.app/video/${video}`}
-              type="video/mp4"
-            />
+            <source 
+            src={`${process.env.REACT_APP_BACKEND_URL}/video/${video}`} 
+            type="video/mp4" />
 
             Your browser does not support the video tag.
           </video>
@@ -48,7 +47,9 @@ const VideoPlayer = () => {
         <button onClick={() => handleVideoSelect('fast-x.mp4')}>Fast X</button>
       </div>
     </div>
+    
   );
 };
+console.log(`Serving video from path: ${videoPath}`);
 
 export default VideoPlayer;
