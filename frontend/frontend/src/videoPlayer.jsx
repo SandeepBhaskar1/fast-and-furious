@@ -50,6 +50,5 @@ const VideoPlayer = () => {
     
   );
 };
-console.log(`Serving video from path: ${videoPath}`);
 
 export default VideoPlayer;
